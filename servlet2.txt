@@ -1,0 +1,318 @@
+Important Terminologies
+======================
+javax.servlet.Servlet(I)
+	|
+	|
+javax.servlet.GenericServlet(AC)
+	|
+	|
+javax.servlet.http.HttpServlet(C)
+
+First web application development having servlet program as web resource program
+================================================================================
+Diagram: servlet2.1
+
+Deployment Directory structure
+-----------------------------
+DateApp
+|
+|---Java Resources
+|	|
+	|-----src
+		|
+		|---com.ihub.www
+			|
+			|----DateSrv.java
+|---Web Content
+	|
+	|-----WEB-INF
+		|
+		|----web.xml 
+Note:
+-----
+In above application we need to add "servlet-api.jar" file in project build path.
+
+
+step1:
+------
+	Launch Eclipse IDE by choosing workspace location.
+
+step2:
+------
+	Create a dynamic web project i.e DateApp.
+	ex:
+		File --> new --> Dynamic web project -->
+		project Name : DateApp
+		Dynamic web module version : 3.0 ---> Next ---> Next --> 
+		Generate web.xml file (click to checkbox) --> Finish.
+
+step3:
+------
+	Add "servlet-api.jar" file in project build path.
+	ex:
+		right click to DateApp --> build path --> configure build path -->
+		libraries --> Add external jars --> select servlet-api.jar file -->open -->ok.
+
+
+step4:
+------
+	Create a package i.e com.ihub.www inside "Java Resources/src" folder.
+	ex:
+		right click to src folder --> new --> package --> 
+		name : com.ihub.www  --> finish.
+
+step5:
+-------
+	Create a servlet program i.e DateSrv inside "com.ihub.www" package.
+	ex:
+		right click to com.ihub.www package --> new --> class --> 
+		Name : DateSrv --> Finish.
+
+DateSrv.java
+------------
+package com.ihub.www;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Date;
+
+import javax.servlet.GenericServlet;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+
+public class DateSrv extends GenericServlet 
+{
+	public void service(ServletRequest req,ServletResponse res)throws ServletException,IOException 
+	{
+		PrintWriter pw=res.getWriter();
+		res.setContentType("text/html");
+		
+		Date d=new Date();
+		pw.println("<center><h1>Current Date and Time : <br> "+d+"</h1></center>");
+		
+		pw.close();
+	}
+	
+}
+
+step6:
+-----
+	Configure servlet program in web.xml file.
+
+web.xml
+-------
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" id="WebApp_ID" version="3.0">
+  
+  <servlet>
+  	<servlet-name>DateSrv</servlet-name>
+  	<servlet-class>com.ihub.www.DateSrv</servlet-class>
+  </servlet>
+  <servlet-mapping>
+  	<servlet-name>DateSrv</servlet-name>
+  	<url-pattern>/test</url-pattern>
+  </servlet-mapping>
+  
+</web-app>
+
+step7:
+------
+	Add Tomcat 7.x server to Eclipse IDE.
+	ex:
+		window ---> preferences --> servers --> Runtime environments -->
+		click to add button --> select Apache Tomcat 7.0 --> Next -->
+		select Tomcat installation directory (Tomcat 7.0 folder)-->ok-->finish -->ok.
+
+step8:
+------
+	Run Dynamic web project.
+	ex:
+		right click to DateApp --> run as --> run on server --> select apache tomcat7
+		--> next --> finish.
+
+step9:
+------
+	Test the application by using below request url.
+	ex:
+						url pattern 
+						|
+		http://localhost:2525/DateApp/test 
+			|          |     |
+		hostname 	portno  web app name 
+
+Note:
+------
+If there is a problem with web.xml file then we will get 404 Error.
+
+If there is a problem with servlet program then we will get 500 Error.	
+
+
+
+Types of url patterns
+=====================
+URL Pattern will hide technology name and class name from the outsider for security reason.
+
+Our client, server and other web resource programs will recognize servlet program by using url patterns only.
+
+We have three types of url patterns.
+
+1) Exact match url pattern 
+
+2) Directory match url pattern 
+
+3) Extension match url pattern 
+
+Every server is designed to support three types of url patterns.
+
+
+1) Exact match url pattern 
+----------------------------
+It will starts with '/' symbol followed by a name.
+ex:
+
+web.xml
+-------
+	<url-pattern>/test</url-pattern>
+
+Request url
+----------
+	http://localhost:2525/DateApp/test   -- valid
+	http://localhost:2525/DateApp/best   -- invalid 
+	http://localhost:2525/DateApp/x/test -- invalid   
+
+2) Directory match url pattern 
+---------------------------
+It will starts with '/' symbol and ends with '*' symbol.
+
+ex:
+
+web.xml
+--------
+	<url-pattern>/x/y/*</url-pattern>
+
+request url
+----------
+	http://localhost:2525/DateApp/x/y/z	-- valid
+	http://localhost:2525/DateApp/x/y/z/test -- valid 
+	http://localhost:2525/DateApp/y/x/z     -- invalid 
+
+3) Extension match url pattern 
+----------------------------
+It will starts with '*' symbol followed by a extension.
+
+ex:
+
+web.xml
+------
+	<url-pattern>*.do</url-pattern>
+
+request url
+---------
+	http://localhost:2525/DateApp/x/y/z  -- invalid 
+	http://localhost:2525/DateApp/x/y/z.do  -- valid 	
+
+Interview Question
+================
+Q)Write a java program to multiple two arrays?
+
+input:
+	arr1 ={2,4,9};
+	arr2 ={3,5};
+
+outout:
+	8715 (249*35)
+
+ex:
+---
+package com.ihub.www;
+
+public class Example 
+{
+	public static void main(String[] args) 
+	{
+		int[] arr1 ={2,4,9};
+		int[] arr2 ={3,5};
+		
+		//caller method 
+		String res1=arrayToString(arr1);
+		String res2=arrayToString(arr2);
+		
+		//converting string to int 
+		int a =Integer.parseInt(res1);
+		int b=Integer.parseInt(res2);
+		
+		System.out.println(a*b);
+	}
+	//callie method
+	public static String arrayToString(int[] arr) // arr = 2 4 9 
+	{
+		
+		StringBuffer sb=new StringBuffer();
+		
+		//for each loop
+		for(int i:arr)
+		{
+			sb.append(i);
+		}
+		
+		return sb.toString();
+		
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
